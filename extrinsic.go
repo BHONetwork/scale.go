@@ -42,9 +42,9 @@ func (e *ExtrinsicDecoder) Init(data scaleType.ScaleBytes, option *scaleType.Sca
 }
 
 func (e *ExtrinsicDecoder) generateHash() string {
-	if !e.ContainsTransaction {
-		return ""
-	}
+	//if !e.ContainsTransaction {
+	//	return ""
+	//}
 	var extrinsicData []byte
 	if e.ExtrinsicLength > 0 {
 		extrinsicData = e.Data.Data
@@ -117,8 +117,8 @@ func (e *ExtrinsicDecoder) Process() {
 					}
 				}
 			}
-			e.ExtrinsicHash = e.generateHash()
 		}
+		e.ExtrinsicHash = e.generateHash()
 		e.CallIndex = utiles.BytesToHex(e.NextBytes(2))
 	} else {
 		panic(fmt.Sprintf("Extrinsics version %s is not support", e.VersionInfo))
@@ -146,13 +146,8 @@ func (e *ExtrinsicDecoder) Process() {
 		e.Params = append(e.Params, param)
 	}
 
-	if e.ContainsTransaction {
-		result["account_id"] = e.Address
-		result["signature"] = e.Signature
-		result["nonce"] = e.Nonce
-		result["era"] = e.Era
-		result["extrinsic_hash"] = e.ExtrinsicHash
-	}
+	result["account_id"] = e.Address
+	result["signature"] = e.Signature
 
 	if e.CallIndex != "" {
 		result["call_code"] = e.CallIndex
@@ -163,5 +158,6 @@ func (e *ExtrinsicDecoder) Process() {
 	result["nonce"] = e.Nonce
 	result["era"] = e.Era
 	result["params"] = e.Params
+	result["extrinsic_hash"] = e.ExtrinsicHash
 	e.Value = result
 }
